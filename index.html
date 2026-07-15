@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Rutina de Ejercicio Personalizada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .radio-option label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-next,
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-next:hover,
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-back {
+            background: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+
+        .btn-back:hover {
+            background: #e0e0e0;
+        }
+
+        .progress {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .progress-dot.active {
+            background: #667eea;
+            transform: scale(1.3);
+        }
+
+        .progress-dot.completed {
+            background: #4caf50;
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .result-card {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .result-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .result-card p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #764ba2;
+            margin-top: 10px;
+        }
+
+        .routine {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .routine h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .exercise {
+            background: white;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .exercise strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .exercise-details {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .btn-restart {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            margin-top: 20px;
+        }
+
+        .step-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            color: #1565c0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💪 Mi Rutina Personalizada</h1>
+        <p class="subtitle">Responde 5 preguntas y obtén una rutina de ejercicio personalizada</p>
+
+        <!-- Progress -->
+        <div class="progress">
+            <div class="progress-dot active" id="dot-1"></div>
+            <div class="progress-dot" id="dot-2"></div>
+            <div class="progress-dot" id="dot-3"></div>
+            <div class="progress-dot" id="dot-4"></div>
+            <div class="progress-dot" id="dot-5"></div>
+        </div>
+
+        <!-- Paso 1: Peso y Estatura -->
+        <div class="form-section active" id="step-1">
+            <div class="step-title">Paso 1: Datos Básicos</div>
+            <div class="form-group">
+                <label for="peso">¿Cuál es tu peso? (kg)</label>
+                <input type="number" id="peso" placeholder="Ej: 75" min="30" max="300" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="estatura">¿Cuál es tu estatura? (cm)</label>
+                <input type="number" id="estatura" placeholder="Ej: 180" min="100" max="250" step="0.1">
+            </div>
+            <div class="buttons">
+                <button class="btn-next" onclick="irAlPaso(2)">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Paso 2: Edad -->
+        <div class="form-section" id="step-2">
+            <div class="step-title">Paso 2: Tu Edad</div>
+            <div class="form-group">
+                <label for="edad">¿Cuántos años tienes?</label>
+                <input type="number" id="edad" placeholder="Ej: 30" min="13" max="100">
+            </div>
+            <div class="info-box">
+                💡 Esto nos ayuda a adaptar la intensidad y tipo de ejercicios según tu edad.
+            </div>
+            <div class="buttons">
+                <button class="btn-back" onclick="irAlPaso(1)">Atrás</button>
+                <button class="btn-next" onclick="irAlPaso(3)">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Paso 3: Nivel de Actividad -->
+        <div class="form-section" id="step-3">
+            <div class="step-title">Paso 3: Nivel de Actividad</div>
+            <div class="form-group">
+                <label>¿Cuál es tu nivel de actividad actual?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="sedentario" name="actividad" value="sedentario">
+                        <label for="sedentario">Sedentario</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="moderado" name="actividad" value="moderado">
+                        <label for="moderado">Moderado</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="activo" name="actividad" value="activo">
+                        <label for="activo">Muy Activo</label>
+                    </div>
+                </div>
+            </div>
+            <div class="info-box">
+                • Sedentario: Poco movimiento, trabajo de escritorio<br>
+                • Moderado: Algo de actividad, 3-4 días de ejercicio<br>
+                • Muy Activo: Entrena 5+ días a la semana
+            </div>
+            <div class="buttons">
+                <button class="btn-back" onclick="irAlPaso(2)">Atrás</button>
+                <button class="btn-next" onclick="irAlPaso(4)">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Paso 4: Tipo de Dieta -->
+        <div class="form-section" id="step-4">
+            <div class="step-title">Paso 4: Tu Alimentación</div>
+            <div class="form-group">
+                <label for="dieta">¿Cómo es tu alimentación típica durante el día?</label>
+                <select id="dieta">
+                    <option value="">-- Selecciona una opción --</option>
+                    <option value="equilibrada">Equilibrada (balanceado todo)</option>
+                    <option value="proteina-alta">Alta en proteína</option>
+                    <option value="carbohidratos">Rica en carbohidratos</option>
+                    <option value="baja-caloria">Baja en calorías</option>
+                    <option value="poco-organizada">Poco organizada</option>
+                </select>
+            </div>
+            <div class="info-box">
+                🍎 Esto nos ayuda a dar recomendaciones nutricionales junto con tu rutina.
+            </div>
+            <div class="buttons">
+                <button class="btn-back" onclick="irAlPaso(3)">Atrás</button>
+                <button class="btn-next" onclick="irAlPaso(5)">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Paso 5: Objetivo -->
+        <div class="form-section" id="step-5">
+            <div class="step-title">Paso 5: Tu Objetivo</div>
+            <div class="form-group">
+                <label>¿Cuál es tu objetivo principal?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="perder" name="objetivo" value="perder-peso">
+                        <label for="perder">Perder Peso</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="ganar" name="objetivo" value="ganar-musculo">
+                        <label for="ganar">Ganar Músculo</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="mantener" name="objetivo" value="mantenerse">
+                        <label for="mantener">Mantenerse</label>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn-back" onclick="irAlPaso(4)">Atrás</button>
+                <button class="btn-submit" onclick="generarRutina()">Generar mi Rutina</button>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="results-section" id="resultados">
+            <h2 style="color: #667eea; margin-bottom: 20px; text-align: center;">✨ Tu Rutina Personalizada</h2>
+
+            <div class="result-card">
+                <h3>📊 Tu IMC</h3>
+                <p id="imc-text"></p>
+                <div class="result-value" id="imc-value"></div>
+            </div>
+
+            <div class="result-card">
+                <h3>🔥 Calorías Diarias Recomendadas</h3>
+                <div class="result-value" id="calorias-value"></div>
+                <p id="calorias-text"></p>
+            </div>
+
+            <div class="routine" id="routine-container"></div>
+
+            <button class="btn-restart" onclick="reiniciar()">🔄 Hacer de Nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        let paso = 1;
+
+        function irAlPaso(numeroPaso) {
+            // Validar datos del paso actual antes de avanzar
+            if (paso === 1) {
+                const peso = parseFloat(document.getElementById('peso').value);
+                const estatura = parseFloat(document.getElementById('estatura').value);
+                if (!peso || !estatura || peso <= 0 || estatura <= 0) {
+                    alert('Por favor completa peso y estatura');
+                    return;
+                }
+            } else if (paso === 2) {
+                const edad = parseInt(document.getElementById('edad').value);
+                if (!edad || edad <= 0) {
+                    alert('Por favor ingresa tu edad');
+                    return;
+                }
+            } else if (paso === 3) {
+                const actividad = document.querySelector('input[name="actividad"]:checked');
+                if (!actividad) {
+                    alert('Por favor selecciona tu nivel de actividad');
+                    return;
+                }
+            } else if (paso === 4) {
+                const dieta = document.getElementById('dieta').value;
+                if (!dieta) {
+                    alert('Por favor selecciona tu tipo de alimentación');
+                    return;
+                }
+            } else if (paso === 5) {
+                const objetivo = document.querySelector('input[name="objetivo"]:checked');
+                if (!objetivo) {
+                    alert('Por favor selecciona tu objetivo');
+                    return;
+                }
+            }
+
+            // Ocultar paso actual
+            document.getElementById(`step-${paso}`).classList.remove('active');
+            document.getElementById(`dot-${paso}`).classList.add('completed');
+
+            // Mostrar nuevo paso
+            paso = numeroPaso;
+            document.getElementById(`step-${paso}`).classList.add('active');
+            document.getElementById(`dot-${paso}`).classList.add('active');
+
+            // Actualizar puntos de progreso
+            for (let i = 1; i < paso; i++) {
+                document.getElementById(`dot-${i}`).classList.remove('active');
+            }
+            for (let i = paso + 1; i <= 5; i++) {
+                document.getElementById(`dot-${i}`).classList.remove('active');
+                document.getElementById(`dot-${i}`).classList.remove('completed');
+            }
+        }
+
+        function generarRutina() {
+            const objetivo = document.querySelector('input[name="objetivo"]:checked');
+            if (!objetivo) {
+                alert('Por favor selecciona tu objetivo');
+                return;
+            }
+
+            // Obtener datos
+            const peso = parseFloat(document.getElementById('peso').value);
+            const estatura = parseFloat(document.getElementById('estatura').value);
+            const edad = parseInt(document.getElementById('edad').value);
+            const actividad = document.querySelector('input[name="actividad"]:checked').value;
+            const dieta = document.getElementById('dieta').value;
+            const objetivoValue = objetivo.value;
+
+            // Calcular IMC
+            const estaturaMetros = estatura / 100;
+            const imc = (peso / (estaturaMetros * estaturaMetros)).toFixed(1);
+
+            // Determinar categoría IMC
+            let categoriaimc = '';
+            if (imc < 18.5) categoriaimc = 'Bajo peso';
+            else if (imc < 25) categoriaimc = 'Peso normal';
+            else if (imc < 30) categoriaimc = 'Sobrepeso';
+            else categoriaimc = 'Obesidad';
+
+            // Calcular calorías (Fórmula de Harris-Benedict)
+            let tmb;
+            if (peso > 0 && estatura > 0 && edad > 0) {
+                // Usando promedio (sin especificar género)
+                tmb = 655 + (9.6 * peso) + (1.8 * estatura) - (4.9 * edad);
+                tmb = (tmb + (66 + (13.7 * peso) + (5 * estatura) - (6.8 * edad))) / 2;
+            }
+
+            let calorias = tmb * 1.375; // Actividad moderada por defecto
+
+            if (actividad === 'sedentario') calorias = tmb * 1.2;
+            else if (actividad === 'moderado') calorias = tmb * 1.55;
+            else if (actividad === 'activo') calorias = tmb * 1.9;
+
+            if (objetivoValue === 'perder-peso') calorias -= 500;
+            else if (objetivoValue === 'ganar-musculo') calorias += 300;
+
+            calorias = Math.round(calorias);
+
+            // Mostrar resultados
+            document.getElementById('imc-value').textContent = imc;
+            document.getElementById('imc-text').textContent = `Tu clasificación: ${categoriaimc}`;
+            document.getElementById('calorias-value').textContent = `${calorias} kcal`;
+            document.getElementById('calorias-text').textContent = 'Ingesta diaria recomendada según tu perfil.';
+
+            // Generar rutina
+            const rutina = generarRutinaPorObjetivo(objetivoValue, actividad, edad, dieta);
+            document.getElementById('routine-container').innerHTML = rutina;
+
+            // Mostrar resultados
+            document.getElementById(`step-${paso}`).classList.remove('active');
+            document.getElementById('resultados').classList.add('active');
+        }
+
+        function generarRutinaPorObjetivo(objetivo, actividad, edad, dieta) {
+            let html = '<h4>📋 Tu Rutina Semanal</h4>';
+
+            const rutinas = {
+                'perder-peso': {
+                    dias: [
+                        { dia: 'Lunes', ejercicio: 'Cardio', detalles: '30-40 min de trote, bicicleta o elíptica. Intensidad moderada-alta.' },
+                        { dia: 'Martes', ejercicio: 'Entrenamiento de Fuerza', detalles: 'Pecho y espalda. 3 series x 12-15 reps. Descanso 60 seg.' },
+                        { dia: 'Miércoles', ejercicio: 'Cardio HIIT', detalles: '20-25 min: 40 seg intenso, 20 seg descanso. Muy efectivo para quemar grasa.' },
+                        { dia: 'Jueves', ejercicio: 'Piernas y Core', detalles: 'Sentadillas, estocadas, planchas. 3 series x 12 reps.' },
+                        { dia: 'Viernes', ejercicio: 'Cardio Moderado', detalles: '30 min a ritmo constante. Caminar rápido, natación o ciclismo.' },
+                        { dia: 'Sábado', ejercicio: 'Ejercicio Recreativo', detalles: 'Fútbol, tenis, senderismo o cualquier actividad que disfrutes.' },
+                        { dia: 'Domingo', ejercicio: '✨ Descanso', detalles: 'Recuperación y estiramiento suave. Es importante para tu cuerpo.' }
+                    ],
+                    tips: 'Tips: Come en déficit calórico moderado. Aumenta proteína. Duerme 7-8 horas. Bebe 2-3 litros de agua diaria.'
+                },
+                'ganar-musculo': {
+                    dias: [
+                        { dia: 'Lunes', ejercicio: 'Pecho y Tríceps', detalles: 'Press de banca, fondos, flexiones. 4 series x 8-10 reps. Peso pesado.' },
+                        { dia: 'Martes', ejercicio: 'Espalda y Bíceps', detalles: 'Dominadas, remos, curls. 4 series x 8-10 reps. Carga progresiva.' },
+                        { dia: 'Miércoles', ejercicio: 'Cardio Ligero', detalles: '15-20 min de trote suave o caminar. No interfiere con ganancia.' },
+                        { dia: 'Jueves', ejercicio: 'Piernas', detalles: 'Sentadillas, peso muerto, prensa. 4 series x 8-10 reps. ¡Las piernas son importantes!' },
+                        { dia: 'Viernes', ejercicio: 'Hombros y Brazos', detalles: 'Press militar, elevaciones, curls. 4 series x 10-12 reps.' },
+                        { dia: 'Sábado', ejercicio: 'Abdominales y Core', detalles: 'Planchas, abdominales, rotaciones. 3 series x 15 reps.' },
+                        { dia: 'Domingo', ejercicio: '✨ Descanso Total', detalles: 'El músculo crece en reposo. Descansa completamente.' }
+                    ],
+                    tips: 'Tips: Come en superávit calórico (+300-500 kcal). Proteína: 1.6-2.2g por kg de peso. Duerme 8 horas. Incrementa peso gradualmente.'
+                },
+                'mantenerse': {
+                    dias: [
+                        { dia: 'Lunes', ejercicio: 'Entrenamiento Completo', detalles: '3 series: sentadillas, press, remos. 10-12 reps. Descanso 90 seg.' },
+                        { dia: 'Martes', ejercicio: 'Cardio Moderado', detalles: '25-30 min de actividad aeróbica suave a moderada.' },
+                        { dia: 'Miércoles', ejercicio: 'Descanso Activo', detalles: 'Yoga, pilates, estiramiento. Flexibilidad y movilidad.' },
+                        { dia: 'Jueves', ejercicio: 'Entrenamiento Funcional', detalles: 'Circuito: 4 ejercicios x 3 rondas. Descanso 45 seg entre ejercicios.' },
+                        { dia: 'Viernes', ejercicio: 'Cardio', detalles: '20-25 min de tu actividad favorita.' },
+                        { dia: 'Sábado', ejercicio: 'Deporte o Actividad', detalles: 'Juega, camina, nada. Lo importante es mantenerte activo.' },
+                        { dia: 'Domingo', ejercicio: '✨ Descanso', detalles: 'Relájate y recupera energías para la semana.' }
+                    ],
+                    tips: 'Tips: Come balanceado. Proteína 1.2-1.6g por kg. Mantén actividad constante. Duerme 7-8 horas diarias.'
+                }
+            };
+
+            const rutina = rutinas[objetivo] || rutinas['mantenerse'];
+
+            rutina.dias.forEach(dia => {
+                html += `
+                    <div class="exercise">
+                        <strong>${dia.dia}: ${dia.ejercicio}</strong>
+                        <div class="exercise-details">${dia.detalles}</div>
+                    </div>
+                `;
+            });
+
+            html += `<div style="background: #fff3e0; padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 3px solid #ff9800;">
+                <strong style="color: #e65100;">💡 ${rutina.tips}</strong>
+            </div>`;
+
+            return html;
+        }
+
+        function reiniciar() {
+            // Limpiar formulario
+            document.getElementById('peso').value = '';
+            document.getElementById('estatura').value = '';
+            document.getElementById('edad').value = '';
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            document.getElementById('dieta').value = '';
+
+            // Resetear vista
+            document.getElementById('resultados').classList.remove('active');
+            document.getElementById('step-1').classList.add('active');
+
+            // Resetear progreso
+            document.querySelectorAll('.progress-dot').forEach(d => {
+                d.classList.remove('active');
+                d.classList.remove('completed');
+            });
+            document.getElementById('dot-1').classList.add('active');
+
+            paso = 1;
+        }
+    </script>
+</body>
+</html>
